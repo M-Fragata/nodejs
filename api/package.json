@@ -1,12 +1,12 @@
 {
   "name": "api",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Meu primeiro projeto Node.js",
+  "main": "src/server.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev" : "node --watch src/server.js"
   },
-  "keywords": [],
-  "author": "",
+  "author": "Fragata",
   "license": "ISC"
 }
