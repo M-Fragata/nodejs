@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Meu primeiro projeto Node.js",
   "main": "./src/server.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node --watch src/server.js"
   },
   "author": "M. Fragata",
   "license": "ISC"
