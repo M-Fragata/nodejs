@@ -64,10 +64,7 @@ const server = http.createServer(async (req, res) => {
             }
 
             try {
-                const index = `${Number(id)}` - 1
-                const userIndex = users.findIndex((users) => {
-                    users.id === id
-                })
+                const userIndex = users.findIndex((users) =>  users.id === id)
                 users.splice(userIndex, 1)
             } catch (error) {
                 res.writeHead(400, { "Content-Type": "application/json" })
