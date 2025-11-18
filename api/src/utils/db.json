@@ -1,0 +1,19 @@
+{
+    "schedules": [
+        {
+            "name": "Matheus Fragata de Moraes",
+            "date": "21/02/2001",
+            "hour": "18"
+        },
+        {
+            "name": "Lucas Brito de Melo",
+            "date": "21/02/2001",
+            "hour": "18"
+        },
+        {
+            "name": "Chibinho",
+            "date": "21/02/2001",
+            "hour": "19"
+        }
+    ]
+}

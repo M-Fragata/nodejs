@@ -1,4 +1,8 @@
 import { routes } from "../routes.js"
+import { extractQueryParams } from "../utils/extract-query-params.js"
+import { Database } from "../utils/database.js"
+
+const database = new Database()
 
 export function rounteHandler(request, response) {
     const route = routes.find((route) => {
@@ -7,9 +11,14 @@ export function rounteHandler(request, response) {
 
     if (route) {
         const routeParams = request.url.match(route.path)
-        const { ...params } = routeParams.groups
+        const {query, ...params } = routeParams.groups
+
+        
+
         request.params = params
-        return route.handler(request, response)
+        request.query = query ? extractQueryParams(query) : {}
+        
+        return route.handler({ request, response, database })
     } else {
         return response.writeHead(404).end("Rota não encontrada")
     }
