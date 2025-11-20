@@ -1,0 +1,5 @@
+Método,Operação no Mongoose,Fluxo de Controle Essencial,Status Code de Sucesso
+POST,await user.create(body),1. Ler Body. 2. try...catch (JSON inválido). 3. try...catch (criação no DB/validação).,201 Created
+GET,await user.find(),1. try...catch (busca no DB).,200 OK
+DELETE,await user.findByIdAndDelete(id),1. Extrair ID. 2. try...catch (operação no DB). 3. Checar if (deletedUser === null) (404).,204 No Content
+PUT,"await user.findByIdAndUpdate(id, body, { new: true })",1. Ler Body. 2. try...catch (JSON inválido). 3. Extrair ID. 4. try...catch (operação no DB). 5. Checar if (updatedUser === null) (404).,200 OK
