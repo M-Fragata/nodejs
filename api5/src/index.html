@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD API</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        #form {
+            display: flex;
+            flex-flow: column wrap;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background-color: black;
+            width: 50dvw;
+            margin: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="form">
+        <input type="text" id="atleta" placeholder="Atleta" required>
+        <input type="email" id="mail" placeholder="E-mail" required>
+        <input type="number" id="age" placeholder="Idade" required>
+        <input type="text" id="team" placeholder="Time">
+        <input type="number" id="distance" placeholder="Distância" required>
+        <input type="submit" value="Enviar" id="enviar">
+    </div>
+
+
+    <div id="user-list-container">
+
+    </div>
+
+    <script>
+        const API_URL = "http://localhost:3333/users"
+        const enviar = document.querySelector('input#enviar')
+        const userListContainer = document.querySelector('div#user-list-container')
+        const form = document.querySelector("#form")
+
+        const createHTMLUser = (user) => {
+
+            const newDiv = document.createElement('div')
+
+            newDiv.innerHTML = `
+            <p> ID: <strong>${user._id}</strong> </p>
+            <p> Atleta: <strong>${user.name}</strong> </p>
+            <p> E-mail: <strong>${user.email}</strong> </p>
+            <p> Idade: <strong>${user.age}</strong> </p>
+            <p> Time: <strong>${user.team}</strong> </p>
+            <p> Distance: <strong>${user.distance}</strong> </p>
+            <button class="delet" data-id="${user._id}"> Deletar </button> 
+            <button class="edit" data-id="${user._id}"> Editar </button>
+            `
+            return newDiv
+        }
+
+        //Função GET (listar)
+        const loadUsers = async () => {
+            try {
+                const response = await fetch(API_URL)
+
+                if(!response.ok) throw new Error(`Erro HTTP: ${response.status}`)
+
+                const users = await response.json()
+
+                if(users && users.length > 0) {
+                    users.forEach(user => {
+                        userListContainer.appendChild(createHTMLUser(user))
+                    })
+                } else {
+                    userListContainer.innerHTML = "<p>Nenhum usuário cadastrado.</p>"
+                }
+            
+            } catch (error) {
+                console.error("Erro ao carregar usuários", error) 
+                userListContainer.innerHTML = '<p style="color: red">Falha ao conectar à API (Verifique o servidor Node)</p>'   
+            }
+        }
+        // Função POST (enviar)
+        enviar.addEventListener('submit', async (event) => { 
+
+            event.preventDefault()    
+
+            //Pegando os values dos inputs 
+            const userData = {
+                name: document.querySelector('input#atleta').value.trim(),
+                email: document.querySelector('input#mail').value.trim(),
+                age: Number(document.querySelector('input#age').value.trim()),
+                team: document.querySelector('input#team').value.trim(),
+                distance: Number(document.querySelector('input#distance').value.trim())
+            }
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-type": "application/json"
+                    },
+                    body: JSON.stringify(userData)
+                })
+
+
+                const result = await response.json()
+
+                if (response.status === 201) {
+                    alert("Usuário criado com sucesso!")
+
+                    const newUserElement = createHTMLUser(result)
+                    userListContainer.prepend(newUserElement)
+
+                } else {
+                    alert(`Erro ao criar: ${result.error || 'Erro desconhecido'}`)
+                }
+
+            } catch(error) {
+                alert("Falha na comunicação com o servidor. Verifique se o Node está rodando.")
+                console.error("Erro de Rede ou Servidor:", error)
+            }
+        })
+
+        // Função DELETE (deletar)
+        document.addEventListener('click', async (event) => {
+            if (event.target.classList.contains("delet")){
+
+                const id = event.target.dataset.id
+
+                if(!confirm(`Tem certeza que deseja deletar o usuário ${id}?`)) return
+
+                try {
+                    const response = await fetch(`${API_URL}/${id}`, {
+                        method: "DELETE"
+                    })
+
+                    if (response.status === 204) {
+                        //Remove elemento visualmente do DOM
+                        event.target.parentNode.remove()
+                        alert("Usuário deletado com sucesso!")
+                    } else if (response.status === 404) {
+                        alert("Usuário não encontrado!")
+                    } else {
+                        const result = await response.json()
+                        alert(`Erro ao deletar: ${result.error || "Erro desconhecido"}`)
+                    }
+ 
+                } catch (error) {
+                    console.error("Erro DELETE:", error)
+                    alert("Falha de rede ao deletar")
+                }
+            }
+        })
+
+        //Inicialização com a listagem de todos os usuários
+        window.onload = loadUsers
+
+    </script>
+</body>
+
+</html>
