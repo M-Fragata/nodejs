@@ -52,19 +52,59 @@ const server = http.createServer(async (req, res) => {
         try {
             const [, , id] = url.split("/")
 
-            const deleteSchedule = await Schedules
+            const deleteSchedule = await Schedules.findByIdAndDelete(id)
+
+            if (!deleteSchedule) {
+                res.writeHead(404, { "Content-type": "application/json" })
+                return res.end(JSON.stringify({ error: "Não foi possível encontrar o ID" }))
+            }
+
+            res.writeHead(204)
+            return res.end()
 
         } catch (error) {
+            console.log(error)
 
+            res.writeHead(400, { "Content-type": "application/json" })
+            return res.end(JSON.stringify({ error: "Não foi possível deletar o usuário" }))
         }
 
+    } else if (method === "PUT" && url.startsWith("/schedules/")) {
 
+        let body = {}
 
+        try {
 
-    } else {
-        res.writeHead(404, { "Content-type": "application/json" })
-        return res.end(JSON.stringify({ error: "URL não encontrada" }))
+            const buffers = []
+
+            for await (const chunk of req) {
+                buffers.push(chunk)
+            }
+
+            body = JSON.parse(Buffer.concat(buffers).toString())
+
+            const [, , id] = url.split("/")
+
+            const changeSchedule = await Schedules.findByIdAndUpdate(id, body, { new: true })
+
+            if (!changeSchedule) {
+                res.writeHead(404, { "Content-type": "application/json" })
+                return res.end(JSON.stringify({ error: "Agendamento não encontrado"}))
+            }
+        
+            res.writeHead(200, { "Content-type": "application/json" })
+            return res.end(JSON.stringify(changeSchedule))
+        
+        } catch (error) {
+        console.log(error)
+
+        res.writeHead(400, { "Content-type": "application/json" })
+        return res.end(JSON.stringify({ error: "Body ou id não encontrado" }))
     }
+} else {
+    res.writeHead(404, { "Content-type": "application/json" })
+        return res.end(JSON.stringify({ error: "URL não encontrada" }))
+}
 
 })
 
