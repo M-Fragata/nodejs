@@ -2,7 +2,7 @@ import http from "node:http"
 import { dataBase } from "./database.js"
 
 
-const port = 3333
+const port = 3000
 
 const server = http.createServer((req, res) => {
     const { method, url } = req
