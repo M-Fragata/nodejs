@@ -27,7 +27,7 @@ const startServer = () => {
     server.listen(port, () => {
 
         dataBase()
-        console.log("Servidor rodando")
+        console.log(`Servidor rodando na porta ${port}`)
     })
 }
 
