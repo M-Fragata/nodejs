@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2023"],
+    "target": "ES2023",
+    "module": "nodenext",
+    "moduleResolution": "nodenext", // Ajuda o nodenext a encontrar arquivos
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    
+    "outDir": "./dist",    // Onde os arquivos JS serão criados
+    "rootDir": "./src"     // Onde estão seus arquivos TS originais
+  }
+}
