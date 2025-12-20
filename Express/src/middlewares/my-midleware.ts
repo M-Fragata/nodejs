@@ -4,7 +4,7 @@ export function myMiddleware(req: Request, res: Response, next: NextFunction){
     const { id } = req.params
     req.user_id = id
     if(!req.user_id){
-        req.user_id = "12345"
+        req.user_id = Math.random().toString()
     }
 
     return next()
