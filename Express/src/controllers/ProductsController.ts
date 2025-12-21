@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
 import { products } from "../database/database.js"
+import { AppError } from "../utils/appError.js"
 
 export class ProductsController {
     /**
@@ -20,7 +21,8 @@ export class ProductsController {
 
     create(req: Request, res: Response) {
 
-        throw new Error("Erro ao tentar criar o produto")
+        //throw new Error("Erro ao tentar criar o produto")
+        throw new AppError("Erro ao tentar criar o produto")
 
         const {name, price} = req.body  
 
