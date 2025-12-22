@@ -132,9 +132,28 @@ const carrinho = [
     { id: 4, qtdDesejada: 1 }
 ];
 
-const algo = carrinho.map((carro) => {
+const processarCheckOut = (carrinho, estoque) => {
 
-    console.log(estoque.find((estoque) => estoque.id === carro.id).filter((estoque) => estoque.qtd > 0))
-    
-})
+    const carrinhoEstoque = carrinho.map(c => {
+        const produtoNoEstoque = estoque.find(e => e.id === c.id)
+        return {
+            ...produtoNoEstoque,
+            qtdDesejada: c.qtdDesejada
+        }
+    })
 
+    const carrinhoFiltrado = carrinhoEstoque.filter((estoque) => estoque.qtd > 0)
+
+    const valorTotal = carrinhoFiltrado.reduce((acc, valor) => {
+        return acc + valor.preco * valor.qtdDesejada
+    }, 0)
+
+    const nomes = carrinhoFiltrado.map((produto) => ({nome: produto.nome}))
+
+    return {
+        carrinhoFiltrado,
+        valorTotal,
+        nomes
+    }
+}
+console.log(processarCheckOut(carrinho, estoque))
